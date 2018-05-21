@@ -1,0 +1,33 @@
+
+#2. Uncommitted dependency (dirty read): one begin when other calculate
+#3. Inconsistent analysis problem: occurs when a transaction reads several values from the database but a second transaction 
+##                                 updates some of them during the execution of the first. 
+##2-phase locking (2PL):A transaction follows the two-phase locking protocol if all locking opera- tions precede the first 
+##                      unlock operation in the transaction.
+##                      first a growing phase, in which it acquires all the locks needed but cannot release any locks, 
+##                      and then a shrinking phase, in which it releases its locks but cannot acquire any new locks. 
+
+#1.Lost Update: one begin when other read
+## Preventing
+TIME                T1                           T2
+T1                                       begin_transaction      
+T2            begin_transaction             write_lock(balx)
+T3             write_lock(balx)             read(balx)
+T4                WAIT                      balx=balx+100
+T5                WAIT                      write(balx)
+T6                WAIT                   commit/unlock(balx)
+T7             read(balx)
+T8             balx=balx-10
+T9            write(balx)
+
+#2. Uncommitted dependency (dirty read): one begin when other calculate
+TIME                T1                           T2
+T1                                       begin_transaction      
+T2                                        write_lock(balx)
+T3                                          read(balx)
+T4           begin_transaction             balx=balx+100
+T5           write_lock(balx)                write(balx)
+T6                WAIT                   rollback/unlock(balx)
+T7             read(balx)
+T8             balx=balx-10
+T9            write(balx)
