@@ -1,0 +1,105 @@
+#1. Join Table
+##Sorting a join
+SELECT s.branchNo, s.staffNo, fName, IName, propertyNo FROM Staff s, PropertyForRent p
+WHERE s.staffNo = p.staffNo
+ORDER BY s.branchNo, s.staffNo, propertyNo;
+
+##Three-table Join
+SELECT b.branchNo, b.city, s.staffNo, fName, IName, propertyNo FROM Branch b, Staff s, PropertyForRent p
+WHERE b.branchNo = s.branchNo AND s.staffNo = p.staffNo ORDER BY b.branchNo, s.staffNo, propertyNo;
+###Alternative 
+FROM (Branch b JOIN Staff s USING branchNo) AS bs JOIN PropertyForRent p USING staffNo
+
+##Multiple grouping columns
+SELECT s.branchNo, s.staffNo, COUNT(*) AS myCount FROM Staff s, PropertyForRent p
+WHERE s.staffNo = p.staffNo
+GROUP BY s.branchNo, s.staffNo
+ORDER BY s.branchNo, s.staffNo;
+
+##Computing a join
+SELECT [DISTINCT | ALL] {* | columnList} FROM TableName1 CROSS JOIN TableName2
+
+##Left Outer Join (Includes all left table)
+SELECT b.*, p.*
+FROM Branch1 b LEFT JOIN PropertyForRent1 p ON b.bCity = p.pCity;
+
+## Right Outer Join (Includes all right table)
+SELECT b.*, p.*
+FROM Branch1 b RIGHT JOIN PropertyForRent1 p ON b.bCity = p.pCity;
+
+##Full Outer Join
+SELECT b.*, p.*
+FROM Branch1 b FULL JOIN PropertyForRent1 p ON b.bCity = p.pCity;
+
+#2. EXISTS and NOT EXISTS
+
+##Query using EXISTS
+
+###SELECT staffNo, fName, IName, position FROM Staff s
+WHERE EXISTS (SELECT *
+FROM Branch b
+WHERE s.branchNo = b.branchNo AND city = ‘London’);
+
+#3.Combine results tables(UNION, INTERSECT, EXCEPT)
+
+##UNION
+(SELECT city 
+FROM Branch
+WHERE city IS NOT NULL)
+UNION
+(SELECT city
+FROM PropertyForRent
+WHERE city IS NOT NULL);
+
+## INTERSECT
+(SELECT city
+FROM Branch)
+INTERSECT
+(SELECT city
+FROM PropertyForRent);
+##EXCEPT
+(SELECT city
+FROM Branch)
+EXCEPT
+(SELECT city
+FROM PropertyForRent);
+
+#3. DB Updates (INSERT, UPDATE, DELETE)
+## INSERT...VALUES
+INSERT INTO Staff
+VALUES ('SG16','ALAN','BROWN','ASSISTANT', date'1957-05-25');
+
+##INSERT using defaults
+INSERT INTO Staff(staffNo, fName, IName, position, salary, branchNo)
+VALUES('SG44','Anne','Jones','Assistant',8100,'B003')
+#equals to
+INSERT INTO Staff
+VALUES ('SG44','Anne','Jones','Assistant',8100,'B003');
+
+##INSERT . . . SELECT
+INSERT INTO StaffPropCount
+(SELECT s.staffNo, fName, IName, COUNT(*)
+FROM Staff s, PropertyForRent p WHERE s.staffNo = p.staffNo GROUP BY s.staffNo, fName, IName) UNION
+(SELECT staffNo, fName, IName, 0 FROM Staff s
+WHERE NOT EXISTS (SELECT *
+FROM PropertyForRent p WHERE p.staffNo = s.staffNo));
+
+##Modifying (UPDATE)
+UPDATE Staff
+SET salary = salary*1.03;
+
+#UPDATE specific row
+UPDATE Staff
+SET salary = salary*1.05 WHERE position = ‘Manager’;
+
+#UPDATE multiple columns
+UPDATE Staff
+SET position = ‘Manager’, salary = 18000 WHERE staffNo = ‘SG14’;
+
+#Deleting data from the database (DELETE)
+DELETE FROM Viewing WHERE propertyNo = ‘PG4’;
+#DELETE ALL ROWS
+DELETE FROM Viewing WHERE propertyNo = ‘PG4’;
+
+
+
