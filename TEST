@@ -1,0 +1,16 @@
+#LIKE
+SELECT ShipmetID,ShipperName,ShipperInvoiceNumber
+FROM SHIPMENT
+WHERE ShipperName LIKE 'AB*';
+
+#SUM GROUP BY 
+SELECT City, Store, Sum(Quantity) AS TotalQuantity
+FROM ITEM
+GROUP BY City, Store;
+
+#Subsequery
+SELECT s.ShipperName, s.DepartureDate
+FROM SHIPMENT s
+WHERE s.ShipmentID IN (SELECT i.ShipmentID FROM  SHIPMENT_ITEM i WHERE Value >=1000)
+ORDER BY ShipperName, DepartureDate DESC;
+
