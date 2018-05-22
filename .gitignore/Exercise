@@ -1,0 +1,28 @@
+INSERT INTO table(column names)
+VALUES ('values');
+
+#CREATE PROCEDURE
+CREATE PROCEDURE MyProc
+AS SELECT *
+FROM Customer
+;
+
+#CREATE INDEX
+CREATE INDEX ItemIndex
+ON ITEM (ItemNum)
+;
+
+#Create View
+CREATE VIEW Game AS
+SELECT ItemNum, Description, OnHand, Price
+FROM Item
+WHERE Category='GME'
+;
+
+#DELETE
+DELETE *
+FROM OrderLine
+WHERE ItemNum='DL51';
+
+
+
