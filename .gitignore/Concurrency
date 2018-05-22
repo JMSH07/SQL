@@ -8,7 +8,7 @@
 ##                      and then a shrinking phase, in which it releases its locks but cannot acquire any new locks. 
 
 #1.Lost Update: one begin when other read
-## Preventing
+## Preventing Lost Update
 TIME                T1                           T2
 T1                                       begin_transaction      
 T2            begin_transaction             write_lock(balx)
@@ -21,13 +21,15 @@ T8             balx=balx-10
 T9            write(balx)
 
 #2. Uncommitted dependency (dirty read): one begin when other calculate
-TIME                T1                           T2
-T1                                       begin_transaction      
-T2                                        write_lock(balx)
-T3                                          read(balx)
-T4           begin_transaction             balx=balx+100
-T5           write_lock(balx)                write(balx)
-T6                WAIT                   rollback/unlock(balx)
-T7             read(balx)
-T8             balx=balx-10
-T9            write(balx)
+## Prevention dirty read
+Time              T1                      T2                     T3          T4 
+A                                                                       Begin Transaction
+B            Begin transactions     Write Lock(balx)     Read(balx)     balx=balx+100
+Database       100                        100                  100           100
+
+ 
+TIME T5                  T6                  T7            T8             T9             T10
+A    writelock(balx)     WAIT             READ(balx)   balx=balx-10   write balx    commit unlock(balx)
+B    write(balx)        Rollbakc- unlick(balx)
+Database 200             100                100            100           90              90
+
