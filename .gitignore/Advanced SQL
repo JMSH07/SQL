@@ -1,0 +1,58 @@
+DECLARE : vStaffNo Staff.staffNo%TYPE; (variable same type as a column)
+          vStaffNo1 Staff%ROWTYPE; (variable same type as an entire row)
+BEGIN (Mandatory)
+EXCEPTION
+END
+;
+
+#assignment
+vStaffNo := ‘SG14’;
+
+SELECT COUNT(*) INTO x
+FROM PropertyForRent
+WHERE staffNo = vStaffNo;
+
+#Control Statement: COnditional IF, COnditional CASE, LOOP, WHILE and REPEAT, FOR
+##if
+IF (position = ‘Manager’) THEN
+	salary := salary*1.05;
+ELSE
+	salary := salary*1.05;
+END IF;
+
+##case
+UPDATE Staff
+SET salary = CASE
+	WHEN position = ‘Manager’
+	THEN salary * 1.05
+	ELSE
+	salary * 1.02
+END;
+##loop
+x:=1;
+myLoop:
+LOOP
+	x := x+1;
+	IF (x > 3) THEN
+		EXIT myLoop;	--- exit loop now
+END LOOP myLoop;
+--- control resumes here
+y := 2;
+
+##WHILE and REPEAT
+WHILE (condition) DO
+	<SQL statement list>
+END WHILE [labelName];
+ 
+REPEAT
+	<SQL statement list>
+UNTIL (condition)
+END REPEAT [labelName];
+
+##FOR
+myLoop1:
+FOR iStaff AS SELECT COUNT(*) FROM PropertyForRent WHERE staffNo = ‘SG14’ DO
+		…..	
+END FOR myLoop1;
+
+
