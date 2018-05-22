@@ -37,10 +37,15 @@ Database 200             100                100            100           90     
 Time        T1                                      T2               T3                    T4
 User A     Read paper,lock(paper)             read Pencil         paper+1               Pencil+1
 USER B     Read pencil( Not Available Wait)    Not Avail (Wait)   Read Pencil (wait)     Read-papaer (wait)
-Database Inventory Table  paper pencil
+Database  paper pencil                        paper pencil        paper pencil           paper pencil
 
-Time        T5                                        T6               T7                    T8          T9
-User A     Commit paper+1                     commit pencil+1      Release all locks       
-USER B     Read pencil( Not Available Wait)    Not Avail (Wait)   Read Pencil (wait)     Read-papaer (wait)
-Database Inventory Table  paper pencil
+Time        T5                                        T6               T7                        T8         
+User A     Commit paper+1                     commit pencil+1      Release all locks        End or auto other processing   
+USER B     Read pencil( Not Available Wait)    Not Avail (Wait)   Read Pencil  pencil+1        pencil+1+1 pencil+1+1
+Database    paper+1 pencil                 Paper+1 Pencil +1      Paper+1 Pencil+1+1            paper+1 pencil +1
 
+
+ Time        T9                              T10                        T11                     T12              T13
+User A     ....                             ....                      ....                     ....            ....
+User B   Commit(Pencil +1+1) pencil+1+1   read paper+1 paper+1        paper+1+1 paper+1+1    commit paper+1+1    release all locks
+Database  paper+1 pencil +2                paper+1 pencil 2            paper+1 pencil 2        paper 2  pencil 2  paper 2 pencil 2
