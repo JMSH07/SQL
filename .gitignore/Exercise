@@ -24,5 +24,22 @@ DELETE *
 FROM OrderLine
 WHERE ItemNum='DL51';
 
+# IN
+SELECT CustomerName
+FROM Customer
+WHERE RepNum IN
+(SELECT RepNum
+FROM REP
+WHERE RepNum='15');
 
+#HAVING
+SELCT CUSTOMER.REPNUM, COUNT(*) AS NumCustomers, Avg(Customer.Balance) AS AverageBalance
+FROM Customer
+GROUP BY Customer.RepNum
+HAVING (Avg(Customer.Balance)<2000)
+ORDER BY Customer.RepNum
+
+#UPDATE
+UPDATE Customer SET Street='167 Hail St.'
+WHERE Customer='502';
 
